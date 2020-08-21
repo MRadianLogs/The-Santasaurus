@@ -57,12 +57,12 @@ public class GameManager : MonoBehaviour
     {
         //Loop through all items
         //If item is in destination, add points to score.
-        foreach(GameObject itemObject in ItemManager.getGameItems())
+        foreach(GameObject itemObject in ItemManager.instance.gameItems)
         {
             PickupableItem item = itemObject.GetComponent<PickupableItem>();
-            if(item.getIsInCorrectDestination())
+            if(item.IsInCorrectDestination)
             {
-                score += item.getPointValue();
+                score += item.PointValue;
                 Debug.Log("Adding to score!");
             }
         }

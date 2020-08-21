@@ -4,22 +4,46 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    static List<GameObject> gameItems = null;
+    public static ItemManager instance;
 
-    // Start is called before the first frame update
-    void Start()
+    public List<GameObject> gameItems { get; private set; }
+    private List<int> usedRandomNumbers = null;
+
+    private void Awake()
     {
-        gameItems = new List<GameObject>();
-             
-        foreach(Transform child in transform)
+        if (instance == null)
         {
-            gameItems.Add(child.gameObject);
+            instance = this;
         }
-        //gameItems.AddRange(GetComponents<GameObject>());
+        else if (instance != this)
+        {
+            Debug.Log("Instance already exists! Destroying object!");
+            Destroy(transform.root.gameObject);
+        }
+
+        gameItems = new List<GameObject>();
+        usedRandomNumbers = new List<int>();
     }
 
-    public static List<GameObject> getGameItems()
+    private void Start()
     {
-        return gameItems;
+        RandomizeItemDestinations();
+    }
+
+    private void RandomizeItemDestinations()
+    {
+        int numDestinations = DestinationManager.instance.destinationTrees.Count;
+        foreach (GameObject item in gameItems)
+        {
+            int randomDestNum = Random.Range(0, numDestinations-1);
+            Debug.Log("First random num: " + randomDestNum);
+            while (usedRandomNumbers.Contains(randomDestNum)) //TODO: FIX INFINITE LOOP ERROR! Have this done last!
+            {
+                randomDestNum = Random.Range(0, numDestinations - 1);
+                Debug.Log("new rand: " + randomDestNum);
+            }
+            item.GetComponentInChildren<PickupableItem>().SetTreeDestinationNumber(randomDestNum);
+            usedRandomNumbers.Add(randomDestNum);
+        }
     }
 }

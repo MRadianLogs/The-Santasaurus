@@ -1,53 +1,54 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PickupableItem : Interactable
 {
-    public string itemName;//The name of the item.
-    public int pointValue;//How much putting this item under the correct tree gives.
+     public string ItemName { get; }//The name of the item.
+    [SerializeField] public int PointValue { get; }//How much putting this item under the correct tree gives.
 
-    public int treeDestinationNumber;//The number corresponding to the correct tree of which it should be placed under.
-    bool isPickedUp;//Whether the item is currently in the dinos mouth.
-    bool isInCorrectDestination;//Whether or not the item is under the correct tree.
+    public int TreeDestinationNumber { get; private set; }//The number corresponding to the correct tree of which it should be placed under.
+    private bool isPickedUp = false;//Whether the item is currently in the dinos mouth.
+    public bool IsInCorrectDestination { get; private set; }//Whether or not the item is under the correct tree.
 
-    public override void interact()
+    private PlayerInventoryController playerInventory = null;
+
+    private void Awake()
     {
-        //base.interact();//Calls the super method.
-
-        pickUpItem();
+        playerInventory = FindObjectOfType<PlayerInventoryController>();
     }
 
-    void pickUpItem()
+    private void Start()
     {
-        if (Time.time > PlayerInteraction.getNextPickUpTime())
+        ItemManager.instance.gameItems.Add(gameObject);
+    }
+
+    public override void Interact()
+    {
+        //base.interact();//Calls the super method.
+        if(playerInventory.PickUpItem(gameObject)) //If pickup successful.
         {
-            if (PlayerInteraction.getItemInMouth() == null)
-            {
-                PlayerInteraction.setItemInMouth(this.gameObject);
-                PlayerInteraction.setNextPickUpTime(Time.time + PlayerInteraction.getCoolDownTime());
-                isInCorrectDestination = false;
-            }
+            GetPickedUp();
         }
     }
 
-    public int getTreeDestinationNumber()
+    public void GetPickedUp()
     {
-        return treeDestinationNumber;
+        isPickedUp = true;
+        IsInCorrectDestination = false;
+        gameObject.SetActive(false);
     }
 
-    public void setIsInCorrectDestination(bool value)
+    public void GetDropped()
     {
-        this.isInCorrectDestination = value;
+        isPickedUp = false;
     }
 
-    public bool getIsInCorrectDestination()
+    public void SetIsInCorrectDestination(bool newValue)
     {
-        return isInCorrectDestination;
+        IsInCorrectDestination = newValue;
     }
 
-    public int getPointValue()
+    public void SetTreeDestinationNumber(int newDestNumber)
     {
-        return pointValue;
+        TreeDestinationNumber = newDestNumber;
     }
 }

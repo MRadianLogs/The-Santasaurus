@@ -1,12 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Interactable : MonoBehaviour
+public abstract class Interactable : MonoBehaviour
 {
-    public float interactionRadius = 3f;
-    Transform player;
-    bool canInteract;
+    private float interactionRadius = 3f;
 
     private void OnDrawGizmosSelected()
     {
@@ -14,44 +10,8 @@ public class Interactable : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
     }
 
-    public void Start()
-    {
-        player = FindObjectOfType<PlayerInteraction>().transform;
-    }
-
-    public virtual void interact()
+    public virtual void Interact()
     {
         //This function is meant to be overridden.
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (!GameManager.getGameHasEnded())
-        {
-            float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
-            checkDistance(distanceFromPlayer);
-            checkInteracting();
-        }
-    }
-
-    void checkInteracting()
-    {
-        if(canInteract && Input.GetButtonDown("InteractButton"))
-        {
-            interact();
-        }
-    }
-
-    void checkDistance(float distanceFromPlayer)
-    {
-        if(distanceFromPlayer <= interactionRadius)
-        {
-            canInteract = true;
-        }
-        else
-        {
-            canInteract = false;
-        }
     }
 }

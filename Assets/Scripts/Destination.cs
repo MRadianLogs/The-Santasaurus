@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Destination : MonoBehaviour
 {
-    public float itemPlacementRadius = 2f;//The radius that counts for items placed under tree. Should I use a collider instead?
+    private float itemPlacementRadius = 2f;//The radius that counts for items placed under tree. Should I use a collider instead?
 
-    public int destinationNumber;
-    List<GameObject> itemsUnderTree;
+    private int destinationNumber = -1;
+    private List<GameObject> itemsUnderTree;
 
     private void OnDrawGizmosSelected()
     {
@@ -15,61 +15,50 @@ public class Destination : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, itemPlacementRadius);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         itemsUnderTree = new List<GameObject>();
     }
 
-    // Update is called once per frame
-    void Update()
+    // Start is called before the first frame update
+    void Start()
     {
-        //Check if any items removed. (Out of range).
-        checkAnyItemsRemoved();
+        DestinationManager.instance.destinationTrees.Add(gameObject);
     }
 
     void OnTriggerEnter2D (Collider2D collision)
     {
-        Debug.Log("Collided with: " + collision.name);
+        //Debug.Log("Collided with: " + collision.name);
         GameObject collidedObject = collision.gameObject;
-        PickupableItem item = collidedObject.GetComponent<PickupableItem>();
+        PickupableItem newItem = collidedObject.GetComponent<PickupableItem>();
 
         //Check if collided with a new item under tree. (item not in list)
-        if(item != null)
+        if (newItem != null)
         {
             //Add item to list.
             itemsUnderTree.Add(collidedObject);
             //Recalc if in proper location and mark item appropriately.
-            checkProperLocation();
+            CheckIfProperLocation(newItem);
         }
     }
 
-    private void checkAnyItemsRemoved()
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        //Debug.Log("Checking if any items removed.");
-        for(int i = 0; i < itemsUnderTree.Count; i++)
+        GameObject collidedObject = collision.gameObject;
+        if (itemsUnderTree.Contains(collidedObject))
         {
-            GameObject itemGameObject = itemsUnderTree[i];
-            float distance = Vector2.Distance(itemGameObject.transform.position, transform.position);
-            if (distance > itemPlacementRadius)
-            {
-                //Remove from list.
-                itemsUnderTree.Remove(itemGameObject);
-                Debug.Log("Removed: " + itemGameObject.name + " from list!");
-            }
+            PickupableItem item = collidedObject.GetComponent<PickupableItem>();
+            itemsUnderTree.Remove(collidedObject);
+            //Debug.Log("Removed: " + item.name + " from list!");
         }
     }
 
-    private void checkProperLocation()
+    private void CheckIfProperLocation(PickupableItem item)
     {
-        foreach(GameObject itemGameObject in itemsUnderTree)
+        if(item.TreeDestinationNumber == destinationNumber)
         {
-            PickupableItem item = itemGameObject.GetComponent<PickupableItem>();
-            if(item.getTreeDestinationNumber() == destinationNumber)
-            {
-                Debug.Log("" + item.name + " is in the right place!");
-                item.setIsInCorrectDestination(true);
-            }
+            Debug.Log("" + item.name + " is in the right place!");
+            item.SetIsInCorrectDestination(true);
         }
     }
 }
