@@ -52,7 +52,7 @@ public class PickupableItem : Interactable
     public void GetPickedUp()
     {
         isPickedUp = true;
-        isInCorrectDest = false;
+        SetIsInCorrectDest(false);
         gameObject.SetActive(false);
     }
 
@@ -67,6 +67,14 @@ public class PickupableItem : Interactable
     }
     public void SetIsInCorrectDest(bool newValue)
     {
+        if(isInCorrectDest) //If item was already in correct location,
+        {
+            ItemManager.instance.DecrementNumitemsInCorrectSpot();
+        }
         isInCorrectDest = newValue;
+        if(isInCorrectDest) //If item is now in correct location,
+        {
+            ItemManager.instance.IncrementNumItemsInCorrectSpot();
+        }
     }
 }

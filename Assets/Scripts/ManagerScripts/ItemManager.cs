@@ -8,6 +8,8 @@ public class ItemManager : Manager
 
     private List<int> usedRandomNumbers = null;
 
+    private int numItemsInCorrectSpot = -1;
+
     public new void Awake()
     {
         if (instance == null)
@@ -59,5 +61,18 @@ public class ItemManager : Manager
             transform.GetChild(i).GetComponentInChildren<PickupableItem>().SetDestNum(randomDestNum);
             usedRandomNumbers.Add(randomDestNum);
         }
+    }
+
+    public void IncrementNumItemsInCorrectSpot()
+    {
+        numItemsInCorrectSpot++;
+    }
+    public void DecrementNumitemsInCorrectSpot()
+    {
+        numItemsInCorrectSpot--;
+    }
+    public int GetNumItemsInCorrectSpot()
+    {
+        return numItemsInCorrectSpot;
     }
 }

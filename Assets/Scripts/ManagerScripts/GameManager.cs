@@ -1,43 +1,66 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    static float currentTime;
-    static float startTime = 240;//How long the game should last, in seconds.
+    public static GameManager instance;
 
-    static float score = 0;
-    static bool gameHasEnded = false;
+    [SerializeField] private float timeLeftInGame = 240f;
 
-    public GameObject gameOverUI;
+    private float score = 0;
+    private bool gameHasEnded = false;
+
+    [SerializeField] private GameObject gameOverUI;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Debug.Log("Instance already exists! Destroying object!");
+            Destroy(transform.root.gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         score = 0;
         gameHasEnded = false;
-        startTime = 240;
-        currentTime = startTime;        
+
+        StartCoroutine(TickDownTime());
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator TickDownTime()
     {
-        currentTime -= 1 * Time.deltaTime;
-        checkRoundEndConditions();
-    }
-
-    private void checkRoundEndConditions()
-    {
-        //Round shoudle end when player gets all gifts in the proper locations or time runs out.
-        if(currentTime <= 0)//Time runs out.
+        while(!gameHasEnded)
         {
-            //Stop game. 
-            endGame();
-            //Calculate points.
+            yield return new WaitForSeconds(1f);
+            timeLeftInGame -= 1f;
+            CheckRoundEndConditions();
         }
     }
 
-    private void endGame()
+    private void CheckRoundEndConditions()
+    {
+        //Round shoudle end when player gets all gifts in the proper locations or time runs out.
+        if(timeLeftInGame <= 0)//Time runs out.
+        {
+            //Stop game. 
+            EndGame();
+        }
+        else if(ItemManager.instance.GetNumItemsInCorrectSpot() == ItemManager.instance.GetItemList().Count) //If all items in correct spot.
+        {
+            //Stop game.
+            EndGame();
+        }
+    }
+
+    private void EndGame()
     {
         if (gameHasEnded == false)
         {
@@ -45,13 +68,13 @@ public class GameManager : MonoBehaviour
             Debug.Log("Game Over!");
             //Good job giving!
             //Calc points.
-            calcPoints();
-            //Show start screen.
+            CalcPoints();
+            //Show game over screen.
             gameOverUI.SetActive(true);
         }
     }
 
-    private void calcPoints()
+    private void CalcPoints()
     {
         //Loop through all items
         //If item is in destination, add points to score.
@@ -67,7 +90,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Total points: " + score);
     }
 
-    public static bool getGameHasEnded()
+    public bool GetGameHasEnded()
     {
         return gameHasEnded;
     }

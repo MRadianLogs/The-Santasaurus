@@ -16,8 +16,8 @@ public class PauseMenuFunctions : MonoBehaviour
     }
 
     void Update()
-    {
-        if (!GameManager.getGameHasEnded())
+    { ///TODO: Change this to work with input manager.
+        if (!GameManager.instance.GetGameHasEnded())
         {
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
             {

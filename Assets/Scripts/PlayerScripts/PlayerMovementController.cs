@@ -5,6 +5,8 @@
 /// </summary>
 public class PlayerMovementController : MonoBehaviour
 {
+    public static PlayerMovementController instance;
+
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private Rigidbody2D playerRigidBody = null;
     private Vector2 movementDirection;
@@ -12,6 +14,19 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private PlayerInputController inputController = null;
 
     [SerializeField] private Animator playerAnimator = null;
+
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Debug.Log("Instance already exists! Destroying object!");
+            Destroy(transform.root.gameObject);
+        }
+    }
 
     // Update is called once per frame
     private void Update()
@@ -55,5 +70,10 @@ public class PlayerMovementController : MonoBehaviour
            playerRigidBody.MovePosition(playerRigidBody.position + movementDirection * movementSpeed * Time.fixedDeltaTime);
 
         }
+    }
+
+    public float GetPlayerCurrentMovementSpeed()
+    {
+        return movementDirection.sqrMagnitude;
     }
 }

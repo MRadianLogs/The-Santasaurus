@@ -28,7 +28,7 @@ public class PlayerInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameManager.getGameHasEnded())
+        if (!GameManager.instance.GetGameHasEnded())
         {
             //Check movementInputted.
             checkMovementInput();
@@ -39,7 +39,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!GameManager.getGameHasEnded())
+        if (!GameManager.instance.GetGameHasEnded())
         {
             playerRigidBody.MovePosition(playerRigidBody.position + movementDirection * moveSpeed * Time.fixedDeltaTime);
         }

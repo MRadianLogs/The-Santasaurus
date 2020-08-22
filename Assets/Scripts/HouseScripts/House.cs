@@ -15,6 +15,10 @@ public class House : MonoBehaviour
     [SerializeField] private GameObject houseNPC = null;
     private List<GameObject> entryways = null;
 
+    private bool playerIsNearHouse = false;
+
+    private bool playerIsInHouse = false;
+
     private void Awake()
     {
         entryways = new List<GameObject>();
@@ -30,13 +34,88 @@ public class House : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        StartCoroutine(UpdateNoiseMeter());
+    }
+
+    private IEnumerator UpdateNoiseMeter()
+    {
+        while (!GameManager.instance.GetGameHasEnded())
+        {
+            //If player is not in house, slowly lower noise meter.
+            if (!playerIsInHouse)
+            {
+                yield return new WaitForSeconds(1f);
+                if (noiseMeter > 0)
+                    DecreaseNoise(1f);
+            }
+            //Else, increase noise if player is moving.
+            else
+            {
+                if (noiseMeter < 100)
+                    AddNoise(1 * PlayerMovementController.instance.GetPlayerCurrentMovementSpeed());
+            }
+            yield return 0;
+        }
+    }
+
+    public void ShowHouseNoiseMeterUI()
+    {
+        ///TODO: Create UI mechanic.
+    }
+
     public int GetHouseNum()
     {
         return houseNum;
     }
 
+    public float GetNoiseMeter()
+    {
+        return noiseMeter;
+    }
     public void AddNoise(float numNoise)
     {
-        noiseMeter += numNoise;
+        float newNoiseValue = noiseMeter + numNoise;
+        if (newNoiseValue >= 100)
+        {
+            noiseMeter = 100;
+        }
+        else
+        {
+            noiseMeter = newNoiseValue;
+        }
+    }
+    public void DecreaseNoise(float numNoise)
+    {
+        float newNoiseValue = noiseMeter - numNoise;
+        if (newNoiseValue <= 0)
+        {
+            noiseMeter = 0;
+        }
+        else
+        {
+            noiseMeter = newNoiseValue;
+        }
+    }
+
+    public bool GetPlayerIsInHouse()
+    {
+        return playerIsInHouse;
+    }
+    public void SetPlayerIsInHouse(bool newValue)
+    {
+        playerIsInHouse = newValue;
+        Debug.Log("Player in house: " + playerIsInHouse);
+    }
+
+    public bool GetPlayerIsNearHouse()
+    {
+        return playerIsNearHouse;
+    }
+    public void SetPlayerIsNearHouse(bool newValue)
+    {
+        playerIsNearHouse = newValue;
+        Debug.Log("Player near house: " + playerIsNearHouse);
     }
 }
