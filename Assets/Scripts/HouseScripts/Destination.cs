@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Destination : MonoBehaviour
 {
-    private float itemPlacementRadius = 2f;//The radius that counts for items placed under tree. Should I use a collider instead?
+    private float itemPlacementRadius = 2f;//The radius that counts for items placed under tree.
 
-    private int destinationNumber = -1;
+    [SerializeField] private int destNum = -1;
     private List<GameObject> itemsUnderTree;
 
     private void OnDrawGizmosSelected()
@@ -18,12 +18,6 @@ public class Destination : MonoBehaviour
     private void Awake()
     {
         itemsUnderTree = new List<GameObject>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        DestinationManager.instance.destinationTrees.Add(gameObject);
     }
 
     void OnTriggerEnter2D (Collider2D collision)
@@ -55,10 +49,15 @@ public class Destination : MonoBehaviour
 
     private void CheckIfProperLocation(PickupableItem item)
     {
-        if(item.TreeDestinationNumber == destinationNumber)
+        if(item.GetDestNum() == destNum)
         {
             Debug.Log("" + item.name + " is in the right place!");
-            item.SetIsInCorrectDestination(true);
+            item.SetIsInCorrectDest(true);
         }
+    }
+
+    public int GetDestNum()
+    {
+        return destNum;
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -57,12 +55,12 @@ public class GameManager : MonoBehaviour
     {
         //Loop through all items
         //If item is in destination, add points to score.
-        foreach(GameObject itemObject in ItemManager.instance.gameItems)
+        foreach(GameObject itemObject in ItemManager.instance.GetItemList().Values)
         {
             PickupableItem item = itemObject.GetComponent<PickupableItem>();
-            if(item.IsInCorrectDestination)
+            if(item.GetIsInCorrectDest())
             {
-                score += item.PointValue;
+                score += item.GetPointValue();
                 Debug.Log("Adding to score!");
             }
         }

@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4516336379580364294}
   - component: {fileID: 4516336379580364293}
-  - component: {fileID: 4516336379580364292}
   - component: {fileID: 4516336379580364295}
   - component: {fileID: 4516336379580364288}
   - component: {fileID: 58103740947789462}
+  - component: {fileID: 4516336379580364292}
   m_Layer: 0
   m_Name: Destination Tree
   m_TagString: Untagged
@@ -83,20 +83,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4516336379580364292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4516336379580364299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3889a42c9a22c6746968a7925e870541, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemPlacementRadius: 2
-  destinationNumber: -1
 --- !u!58 &4516336379580364295
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -150,3 +136,16 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 1.03125
+--- !u!114 &4516336379580364292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4516336379580364299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3889a42c9a22c6746968a7925e870541, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destNum: -1

@@ -2,23 +2,18 @@
 
 public class PickupableItem : Interactable
 {
-     public string ItemName { get; }//The name of the item.
-    [SerializeField] public int PointValue { get; }//How much putting this item under the correct tree gives.
+    [SerializeField] private string itemName = "";//The name of the item.
+    [SerializeField] private int pointValue = -1;//How much putting this item under the correct tree gives.
 
-    public int TreeDestinationNumber { get; private set; }//The number corresponding to the correct tree of which it should be placed under.
+    [SerializeField] private int destNum = -1;//The number corresponding to the correct tree of which it should be placed under.
     private bool isPickedUp = false;//Whether the item is currently in the dinos mouth.
-    public bool IsInCorrectDestination { get; private set; }//Whether or not the item is under the correct tree.
+    private bool isInCorrectDest = false;//Whether or not the item is under the correct tree.
 
     private PlayerInventoryController playerInventory = null;
 
     private void Awake()
     {
         playerInventory = FindObjectOfType<PlayerInventoryController>();
-    }
-
-    private void Start()
-    {
-        ItemManager.instance.gameItems.Add(gameObject);
     }
 
     public override void Interact()
@@ -30,10 +25,34 @@ public class PickupableItem : Interactable
         }
     }
 
+    public string GetItemName()
+    {
+        return itemName;
+    }
+
+    public int GetPointValue()
+    {
+        return pointValue;
+    }
+
+    public int GetDestNum()
+    {
+        return destNum;
+    }
+    public void SetDestNum(int newValue)
+    {
+        destNum = newValue;
+    }
+
+    public bool GetIsPickedUp()
+    {
+        return isPickedUp;
+    }
+
     public void GetPickedUp()
     {
         isPickedUp = true;
-        IsInCorrectDestination = false;
+        isInCorrectDest = false;
         gameObject.SetActive(false);
     }
 
@@ -42,13 +61,12 @@ public class PickupableItem : Interactable
         isPickedUp = false;
     }
 
-    public void SetIsInCorrectDestination(bool newValue)
+    public bool GetIsInCorrectDest()
     {
-        IsInCorrectDestination = newValue;
+        return isInCorrectDest;
     }
-
-    public void SetTreeDestinationNumber(int newDestNumber)
+    public void SetIsInCorrectDest(bool newValue)
     {
-        TreeDestinationNumber = newDestNumber;
+        isInCorrectDest = newValue;
     }
 }
