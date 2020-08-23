@@ -6,7 +6,16 @@ public class ItemManager : Manager
 {
     public static ItemManager instance;
 
-    private List<int> usedRandomNumbers = null;
+    [SerializeField] private GameObject itemPrefab = null;
+    [SerializeField] private int numItemsToSpawn = 6;
+
+    [SerializeField] private int numDests = 6;
+    private List<int> usedRandomDestNumbers = null;
+
+    [SerializeField] private int numSprites = 6;
+    private List<int> usedRandomSpriteNums = null;
+
+    private List<int> usedRandomTreeNumbers = null;
 
     private int numItemsInCorrectSpot = -1;
 
@@ -27,40 +36,71 @@ public class ItemManager : Manager
 
     private void Start()
     {
-        RandomizeItemDestinations(); //TODO: Combine these to save some frames.
-        SetupItemList();
+        SetupItems();
     }
 
-    private void SetupItemList()
+    private void SetupItems()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        usedRandomDestNumbers = new List<int>();
+        usedRandomSpriteNums = new List<int>();
+        usedRandomTreeNumbers = new List<int>();
+
+        //Instantiate all items needed.
+        //Randomize item destinations.
+        //Randomize item sprites.
+        //Place items in random trees.
+        for (int i = 0; i < numItemsToSpawn; i++)
         {
-            GameObject child = transform.GetChild(i).gameObject;
-            PickupableItem childType = child.GetComponentInChildren<PickupableItem>();
-            if (childType != null)
-            {
-                AddItemToList(childType.GetDestNum(), child);
-            }
+            //Instantiate new item.
+            GameObject newItem = Instantiate(itemPrefab);
+            PickupableItem newItemScript = newItem.GetComponentInChildren<PickupableItem>();
+            //Randomize item destination.
+            RandomizeItemDestination(newItemScript);
+            //Randomize item sprite.
+            RandomizeItemSprite(newItemScript);
+            //Assign sprite to dest house.
+            HouseManager.instance.GetItemList()[newItemScript.GetDestNum()].GetComponentInChildren<House>().SetWantedItemSprite(ItemSpriteManager.instance.GetSprite(newItemScript.GetSpriteNum()));
+            //Place item in random tree.
+            RandomizeItemTreeSpawnPosition(newItemScript);
+            AddItemToList(i, newItem);
         }
     }
 
-    private void RandomizeItemDestinations()
+    private void RandomizeItemDestination(PickupableItem newItem)
     {
-        usedRandomNumbers = new List<int>();
+        newItem.SetDestNum(GetUnusedRandomNumber(numDests, usedRandomDestNumbers));
+    }
 
-        int numDestinations = DestinationManager.instance.GetItemList().Count;
-        for (int i = 0; i < transform.childCount; i++)//foreach (GameObject item in GetItemList().Values)
+    private void RandomizeItemSprite(PickupableItem newItem)
+    {
+        newItem.SetSpriteNum(GetUnusedRandomNumber(numSprites, usedRandomSpriteNums));
+    }
+
+    private int GetUnusedRandomNumber(int randomRangeMax, List<int> usedNumbersList)
+    {
+        int randomNum = Random.Range(1, randomRangeMax+1);
+        while (usedNumbersList.Contains(randomNum))
         {
-            int randomDestNum = Random.Range(0, numDestinations);
-            Debug.Log("First random num: " + randomDestNum);
-            while (usedRandomNumbers.Contains(randomDestNum))
-            {
-                randomDestNum = Random.Range(0, numDestinations);
-                Debug.Log("new rand: " + randomDestNum);
-            }
-            transform.GetChild(i).GetComponentInChildren<PickupableItem>().SetDestNum(randomDestNum);
-            usedRandomNumbers.Add(randomDestNum);
+            randomNum = Random.Range(1, randomRangeMax+1);
         }
+        usedNumbersList.Add(randomNum);
+        return randomNum;
+    }
+
+    private void RandomizeItemTreeSpawnPosition(PickupableItem newItem)
+    {
+        newItem.SetSpawnPosition(DestinationManager.instance.GetItemList()[GetUnusedRandomNonDestTreeNumber(numDests, usedRandomTreeNumbers, newItem.GetDestNum())].transform.position);
+    }
+
+    private int GetUnusedRandomNonDestTreeNumber(int randomRangeMax, List<int> usedNumbersList, int destNum)
+    {
+        int randomNum = Random.Range(1, randomRangeMax+1);
+        while (usedNumbersList.Contains(randomNum)) //|| randomNum == destNum) ///TODO: This has a chance of infinite looping. Find a fix?
+        {
+            randomNum = Random.Range(1, randomRangeMax+1);
+        }
+        usedNumbersList.Add(randomNum);
+        return randomNum;
     }
 
     public void IncrementNumItemsInCorrectSpot()

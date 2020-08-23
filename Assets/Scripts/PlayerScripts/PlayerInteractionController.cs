@@ -37,7 +37,7 @@ public class PlayerInteractionController : MonoBehaviour
                 GameObject interactableObject = detectionController.GetClosestInteractableObject();
                 if (interactableObject != null)
                 {
-                    Debug.Log("Closest interable object: " + interactableObject.name);
+                    //Debug.Log("Closest interable object: " + interactableObject.name);
                     interactableObject.GetComponentInChildren<Interactable>().Interact();
                 }
             }

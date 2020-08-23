@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 50260057120413216}
   - component: {fileID: 2123567816219788603}
   m_Layer: 0
-  m_Name: PickUpItem
+  m_Name: PickupableItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,3 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe26ea641395b5947a3f7cc6f5bc3136, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: 
+  pointValue: 5
+  destNum: -1
+  spriteNum: -1

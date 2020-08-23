@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +12,13 @@ public class House : MonoBehaviour
 {
     [SerializeField] private int houseNum = -1;
     private float noiseMeter = -1f; //This determines how asleep the npcs of the house are. If this reaches too high, they wake up!
+    public event Action<int, float> OnNoiseMeterChanged = delegate { }; //The event to call whenever the noise meter is changed.
+    public event Action OnNoiseMeterFull = delegate { };
+    public event Action<int, float> OnShowHouseNoiseMeter = delegate { };
+    public event Action<int> OnHideHouseNoiseMeter = delegate { };
     [SerializeField] private GameObject houseTree = null;
     [SerializeField] private GameObject houseNPC = null;
+    [SerializeField] private SpriteRenderer wantedItemSprite = null;
     private List<GameObject> entryways = null;
 
     private bool playerIsNearHouse = false;
@@ -62,7 +68,11 @@ public class House : MonoBehaviour
 
     public void ShowHouseNoiseMeterUI()
     {
-        ///TODO: Create UI mechanic.
+        OnShowHouseNoiseMeter(houseNum, noiseMeter);
+    }
+    public void HideHouseNoiseMeterUI()
+    {
+        OnHideHouseNoiseMeter(houseNum);
     }
 
     public int GetHouseNum()
@@ -80,11 +90,14 @@ public class House : MonoBehaviour
         if (newNoiseValue >= 100)
         {
             noiseMeter = 100;
+            OnNoiseMeterFull();
         }
         else
         {
             noiseMeter = newNoiseValue;
         }
+        OnNoiseMeterChanged(houseNum, noiseMeter);
+        //Debug.Log("Noise Meter: " + noiseMeter);
     }
     public void DecreaseNoise(float numNoise)
     {
@@ -97,6 +110,12 @@ public class House : MonoBehaviour
         {
             noiseMeter = newNoiseValue;
         }
+        OnNoiseMeterChanged(houseNum, noiseMeter);
+    }
+
+    public void SetWantedItemSprite(Sprite newSprite)
+    {
+        wantedItemSprite.sprite = newSprite;
     }
 
     public bool GetPlayerIsInHouse()
@@ -106,7 +125,7 @@ public class House : MonoBehaviour
     public void SetPlayerIsInHouse(bool newValue)
     {
         playerIsInHouse = newValue;
-        Debug.Log("Player in house: " + playerIsInHouse);
+        //Debug.Log("Player in house: " + playerIsInHouse);
     }
 
     public bool GetPlayerIsNearHouse()
@@ -116,6 +135,6 @@ public class House : MonoBehaviour
     public void SetPlayerIsNearHouse(bool newValue)
     {
         playerIsNearHouse = newValue;
-        Debug.Log("Player near house: " + playerIsNearHouse);
+        //Debug.Log("Player near house: " + playerIsNearHouse);
     }
 }

@@ -10,7 +10,9 @@ public class PlayerHouseDetectionController : MonoBehaviour
         if(nearHouseDetector != null)
         {
             //Near house.
-            nearHouseDetector.GetHouse().SetPlayerIsNearHouse(true);
+            House relatedHouse = nearHouseDetector.GetHouse();
+            relatedHouse.SetPlayerIsNearHouse(true);
+            relatedHouse.ShowHouseNoiseMeterUI();
         }
         PlayerInHouseDetector inHouseDetector = collision.gameObject.GetComponentInChildren<PlayerInHouseDetector>();
         if(inHouseDetector != null)
@@ -26,7 +28,10 @@ public class PlayerHouseDetectionController : MonoBehaviour
         if (nearHouseDetector != null)
         {
             //No longer near house.
-            nearHouseDetector.GetHouse().SetPlayerIsNearHouse(false);
+            House relatedHouse = nearHouseDetector.GetHouse();
+            relatedHouse.SetPlayerIsNearHouse(false);
+            relatedHouse.HideHouseNoiseMeterUI();
+
         }
         PlayerInHouseDetector inHouseDetector = collision.gameObject.GetComponentInChildren<PlayerInHouseDetector>();
         if (inHouseDetector != null)

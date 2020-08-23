@@ -1,17 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
     [SerializeField] private float timeLeftInGame = 240f;
+    public event Action<float> OnTimeLeftValueChanged = delegate { };
 
     private float score = 0;
     private bool gameHasEnded = false;
 
-    [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private GameObject gameOverUI = null;
+    [SerializeField] private Text scoreText = null;
 
     private void Awake()
     {
@@ -29,18 +33,25 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        foreach (GameObject house in HouseManager.instance.GetItemList().Values)
+        {
+            House houseScript = house.GetComponentInChildren<House>();
+            houseScript.OnNoiseMeterFull += HandleHouseNoiseMeterFull;
+        }
+
         score = 0;
         gameHasEnded = false;
-
         StartCoroutine(TickDownTime());
     }
 
     private IEnumerator TickDownTime()
     {
-        while(!gameHasEnded)
+        OnTimeLeftValueChanged(timeLeftInGame);
+        while (!gameHasEnded)
         {
             yield return new WaitForSeconds(1f);
             timeLeftInGame -= 1f;
+            OnTimeLeftValueChanged(timeLeftInGame);
             CheckRoundEndConditions();
         }
     }
@@ -60,18 +71,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void HandleHouseNoiseMeterFull()
+    {
+        EndGame();
+    }
+
     private void EndGame()
     {
         if (gameHasEnded == false)
         {
             gameHasEnded = true;
-            Debug.Log("Game Over!");
+            //Debug.Log("Game Over!");
             //Good job giving!
             //Calc points.
             CalcPoints();
             //Show game over screen.
             gameOverUI.SetActive(true);
+            StartCoroutine(StopTimeAfterEndGame());
         }
+    }
+
+    private IEnumerator StopTimeAfterEndGame()
+    {
+        yield return new WaitForSeconds(3f);
+        Time.timeScale = 0f;//Stops  game time.
     }
 
     private void CalcPoints()
@@ -84,10 +107,11 @@ public class GameManager : MonoBehaviour
             if(item.GetIsInCorrectDest())
             {
                 score += item.GetPointValue();
-                Debug.Log("Adding to score!");
+                //Debug.Log("Adding to score!");
             }
         }
-        Debug.Log("Total points: " + score);
+        scoreText.text = score.ToString();
+        //Debug.Log("Total points: " + score);
     }
 
     public bool GetGameHasEnded()

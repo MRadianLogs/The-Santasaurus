@@ -6,6 +6,7 @@ public class PickupableItem : Interactable
     [SerializeField] private int pointValue = -1;//How much putting this item under the correct tree gives.
 
     [SerializeField] private int destNum = -1;//The number corresponding to the correct tree of which it should be placed under.
+    [SerializeField] private int spriteNum = -1;//The number corresponding to the right sprite in the itemspritemanager.
     private bool isPickedUp = false;//Whether the item is currently in the dinos mouth.
     private bool isInCorrectDest = false;//Whether or not the item is under the correct tree.
 
@@ -44,6 +45,17 @@ public class PickupableItem : Interactable
         destNum = newValue;
     }
 
+    public int GetSpriteNum()
+    {
+        return spriteNum;
+    }
+    public void SetSpriteNum(int newValue)
+    {
+        spriteNum = newValue;
+        //Set actual sprite.
+        gameObject.GetComponentInChildren<SpriteRenderer>().sprite = ItemSpriteManager.instance.GetSprite(spriteNum);
+    }
+
     public bool GetIsPickedUp()
     {
         return isPickedUp;
@@ -59,6 +71,11 @@ public class PickupableItem : Interactable
     public void GetDropped()
     {
         isPickedUp = false;
+    }
+
+    public void SetSpawnPosition(Vector2 newPosition)
+    {
+        gameObject.transform.position = newPosition;
     }
 
     public bool GetIsInCorrectDest()
