@@ -50,9 +50,9 @@ TagManager:
   - name: Items
     uniqueID: 74272263
     locked: 0
-  - name: Destination Trees
-    uniqueID: 1856318215
-    locked: 0
   - name: Player
     uniqueID: 2630699751
+    locked: 0
+  - name: Destination Trees
+    uniqueID: 1856318215
     locked: 0
