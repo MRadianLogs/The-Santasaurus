@@ -10,7 +10,6 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private Rigidbody2D playerRigidBody = null;
     private Vector2 movementDirection;
-    private int facingDirection;
     [SerializeField] private PlayerInputController inputController = null;
 
     [SerializeField] private Animator playerAnimator = null;
@@ -40,22 +39,22 @@ public class PlayerMovementController : MonoBehaviour
             //TODO: Add diagnal directions AND/OR fix priority directions(Up/down).
             if (movementDirection.x > 0)
             {
-                facingDirection = 0;//Facing right. 
+                //Facing right. 
                 transform.rotation = Quaternion.Euler(0, 0, -90);
             }
             else if (movementDirection.x < 0)
             {
-                facingDirection = 2;//Facing left.
+                //Facing left.
                 transform.rotation = Quaternion.Euler(0, 0, 90);
             }
             if (movementDirection.y > 0)
             {
-                facingDirection = 1;//Facing up.
+                //Facing up.
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
             else if (movementDirection.y < 0)
             {
-                facingDirection = 3;//Facing down.
+                //Facing down.
                 transform.rotation = Quaternion.Euler(0, 0, 180);
             }
             

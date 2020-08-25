@@ -3254,6 +3254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 1306315672}
+  inputController: {fileID: 1614680737}
 --- !u!114 &682370292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115449,11 +115450,21 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 682370291}
+    - target: {fileID: 750925993631557699, guid: 1f08f05e227640249994b9ec2474c9b1,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ResumeGame
+      objectReference: {fileID: 0}
     - target: {fileID: 750925993721941065, guid: 1f08f05e227640249994b9ec2474c9b1,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 682370291}
+    - target: {fileID: 750925993721941065, guid: 1f08f05e227640249994b9ec2474c9b1,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: QuitGame
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f08f05e227640249994b9ec2474c9b1, type: 3}
 --- !u!224 &1306315671 stripped
@@ -116733,6 +116744,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1742103087}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1614680737 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8663073447884996724, guid: 2facba42d72be3248a2fbd6811b9a153,
+    type: 3}
+  m_PrefabInstance: {fileID: 1742103087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614680733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16355e1a46eb45d4ab5d124f3256892a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1645099985
 PrefabInstance:
   m_ObjectHideFlags: 0

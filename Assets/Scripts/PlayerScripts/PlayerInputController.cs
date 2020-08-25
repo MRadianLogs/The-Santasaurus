@@ -9,7 +9,7 @@ public class PlayerInputController : MonoBehaviour
     public float HorizontalInput { get; private set; }
     public float VerticalInput { get; private set; }
     public bool InteractInput { get; private set; }
-    //TODO: Consider separating picking up items and interacting with other things into different inputs.
+    public bool PauseButtonInput { get; private set; }
 
     public event Action OnInteract = delegate { }; //This event will be set off whenever the player presses the interact key.
 
@@ -18,6 +18,7 @@ public class PlayerInputController : MonoBehaviour
     {
         HorizontalInput = Input.GetAxis("Horizontal");
         VerticalInput = Input.GetAxis("Vertical");
+        PauseButtonInput = Input.GetButtonDown("PauseButton");
         InteractInput = Input.GetButtonDown("InteractButton");
         if (InteractInput)
             OnInteract();            

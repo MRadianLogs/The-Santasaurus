@@ -1,53 +1,71 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenuFunctions : MonoBehaviour
 {
+    private bool gameIsPaused = false;
 
-    public static bool gameIsPaused = false;
+    [SerializeField] private GameObject pauseMenuUI = null;
 
-    public GameObject pauseMenuUI;
+    [SerializeField] private PlayerInputController inputController = null;
 
-    void Start()
+    private void Start()
     {
+        GameManager.instance.OnGameEnded += HandleOnGameEnded;
+
         gameIsPaused = false;    
     }
 
-    void Update()
-    { ///TODO: Change this to work with input manager.
+    private void Update()
+    {
         if (!GameManager.instance.GetGameHasEnded())
         {
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+            if (inputController.PauseButtonInput)
             {
                 if (gameIsPaused)
                 {
-                    resume();
+                    ResumeGame();
                 }
                 else
                 {
-                    pause();
+                    PauseGame();
                 }
             }
         }
     }
 
-    public void pause()
+    private void HandleOnGameEnded()
     {
-        pauseMenuUI.SetActive(true);//Brings up menu.
+        if(gameIsPaused)
+        {
+            HideUI();
+        }
+    }
+
+    public void PauseGame()
+    {
+        ShowUI();//Brings up menu.
         Time.timeScale = 0f; //Stops game.
         gameIsPaused = true;
     }
 
-    public void resume()
+    public void ResumeGame()
     {
-        pauseMenuUI.SetActive(false);//Hides menu.
+        HideUI();
         Time.timeScale = 1f; //Resumes game.
         gameIsPaused = false;
     }
 
-    public void quit()
+    private void ShowUI()
+    {
+        pauseMenuUI.SetActive(true);
+    }
+    private void HideUI()
+    {
+        pauseMenuUI.SetActive(false);
+    }
+
+    public void QuitGame()
     {
         SceneManager.LoadScene("MainMenu");
     }
