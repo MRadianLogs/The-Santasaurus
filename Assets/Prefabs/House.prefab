@@ -197,5 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   houseNum: -1
+  playerVelocityMakeNoiseLimit: 0.6
   houseTree: {fileID: 0}
   houseNPC: {fileID: 0}
+  wantedItemSprite: {fileID: 0}

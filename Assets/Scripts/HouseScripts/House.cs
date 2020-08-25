@@ -12,6 +12,7 @@ public class House : MonoBehaviour
 {
     [SerializeField] private int houseNum = -1;
     private float noiseMeter = -1f; //This determines how asleep the npcs of the house are. If this reaches too high, they wake up!
+    [SerializeField] private float playerVelocityMakeNoiseLimit = -1f; //The limit of velocity the player can reach before they make noise.
     public event Action<int, float> OnNoiseMeterChanged = delegate { }; //The event to call whenever the noise meter is changed.
     public event Action OnNoiseMeterFull = delegate { };
     public event Action<int, float> OnShowHouseNoiseMeter = delegate { };
@@ -24,6 +25,10 @@ public class House : MonoBehaviour
     private bool playerIsNearHouse = false;
 
     private bool playerIsInHouse = false;
+
+    private float timeHouseQuiet = -1;
+    private Coroutine timeQuietCoroutine = null;
+    private bool timeQuietCoroutineRunning = false;
 
     private void Awake()
     {
@@ -52,17 +57,45 @@ public class House : MonoBehaviour
             //If player is not in house, slowly lower noise meter.
             if (!playerIsInHouse)
             {
+                if (timeQuietCoroutineRunning)
+                {
+                    StopCoroutine(timeQuietCoroutine);
+                    timeQuietCoroutineRunning = false;
+                }
+
                 yield return new WaitForSeconds(1f);
                 if (noiseMeter > 0)
                     DecreaseNoise(1f);
             }
-            //Else, increase noise if player is moving.
+            //Else, if player velocity gets higher than an amount, increase noise. If player velocity stays low for a certain amount of time and no noise is made, start decreasing noise.
             else
             {
-                if (noiseMeter < 100)
+                if(!timeQuietCoroutineRunning)
+                {
+                    timeQuietCoroutine = StartCoroutine(IncrementTimeHouseQuiet());
+                    timeQuietCoroutineRunning = true;
+                }
+                
+                if(PlayerMovementController.instance.GetPlayerCurrentMovementSpeed() > playerVelocityMakeNoiseLimit)
+                {
                     AddNoise(1 * PlayerMovementController.instance.GetPlayerCurrentMovementSpeed());
+                }
             }
             yield return 0;
+        }
+    }
+
+    private IEnumerator IncrementTimeHouseQuiet()
+    {
+        while (!GameManager.instance.GetGameHasEnded())
+        {
+            yield return new WaitForSeconds(1f);
+            timeHouseQuiet++;
+            if (timeHouseQuiet > 3f)
+            {
+                if (noiseMeter > 0)
+                    DecreaseNoise(1f);
+            }
         }
     }
 
@@ -98,6 +131,7 @@ public class House : MonoBehaviour
         }
         OnNoiseMeterChanged(houseNum, noiseMeter);
         //Debug.Log("Noise Meter: " + noiseMeter);
+        timeHouseQuiet = 0;
     }
     public void DecreaseNoise(float numNoise)
     {

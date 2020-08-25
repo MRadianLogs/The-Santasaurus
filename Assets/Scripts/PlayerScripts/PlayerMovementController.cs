@@ -60,6 +60,7 @@ public class PlayerMovementController : MonoBehaviour
             }
             
             playerAnimator.SetFloat("speed", movementDirection.sqrMagnitude);
+            Debug.Log("Player speed: " + GetPlayerCurrentMovementSpeed());
         }
     }
 
