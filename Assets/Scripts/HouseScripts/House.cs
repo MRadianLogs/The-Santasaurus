@@ -13,6 +13,7 @@ public class House : MonoBehaviour
     [SerializeField] private int houseNum = -1;
     private float noiseMeter = -1f; //This determines how asleep the npcs of the house are. If this reaches too high, they wake up!
     [SerializeField] private float playerVelocityMakeNoiseLimit = -1f; //The limit of velocity the player can reach before they make noise.
+    [SerializeField] private float itemDropNoise = 5; //The amount of noise dropping an item in the house causes.
     public event Action<int, float> OnNoiseMeterChanged = delegate { }; //The event to call whenever the noise meter is changed.
     public event Action OnNoiseMeterFull = delegate { };
     public event Action<int, float> OnShowHouseNoiseMeter = delegate { };
@@ -97,6 +98,11 @@ public class House : MonoBehaviour
                     DecreaseNoise(1f);
             }
         }
+    }
+
+    public void HandleItemDroppedInHouse()
+    {
+        AddNoise(itemDropNoise);  
     }
 
     public void ShowHouseNoiseMeterUI()

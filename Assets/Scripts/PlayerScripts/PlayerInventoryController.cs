@@ -25,6 +25,14 @@ public class PlayerInventoryController : MonoBehaviour
         currentHeldItem.transform.position = new Vector2(transform.position.x, transform.position.y);
         currentHeldItem.SetActive(true);
         currentHeldItem.GetComponentInChildren<PickupableItem>().GetDropped();
+
+        //If item dropped inside of house,
+        House itemHouse = PlayerHouseDetectionController.instance.GetCurrentActiveHouse();
+        if (itemHouse != null)
+        {
+            itemHouse.HandleItemDroppedInHouse();
+        }
+
         //Clear inventory.
         currentHeldItem = null;
         IsHoldingItem = false;

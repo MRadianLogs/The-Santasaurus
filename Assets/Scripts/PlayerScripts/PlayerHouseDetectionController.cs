@@ -4,6 +4,28 @@ using UnityEngine;
 
 public class PlayerHouseDetectionController : MonoBehaviour
 {
+    public static PlayerHouseDetectionController instance;
+
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Debug.Log("Instance already exists! Destroying object!");
+            Destroy(transform.root.gameObject);
+        }
+    }
+
+    private House currentActiveHouse = null; //The house the player is currently inside.
+
+    public House GetCurrentActiveHouse()
+    {
+        return currentActiveHouse;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         PlayerNearHouseDetector nearHouseDetector = collision.gameObject.GetComponentInChildren<PlayerNearHouseDetector>();
@@ -18,7 +40,9 @@ public class PlayerHouseDetectionController : MonoBehaviour
         if(inHouseDetector != null)
         {
             //In House.
-            inHouseDetector.GetHouse().SetPlayerIsInHouse(true);
+            House relatedHouse = inHouseDetector.GetHouse();
+            relatedHouse.SetPlayerIsInHouse(true);
+            currentActiveHouse = relatedHouse;
         }
     }
 
@@ -38,6 +62,7 @@ public class PlayerHouseDetectionController : MonoBehaviour
         {
             //No longer in House.
             inHouseDetector.GetHouse().SetPlayerIsInHouse(false);
+            currentActiveHouse = null;
         }
     }
 }
