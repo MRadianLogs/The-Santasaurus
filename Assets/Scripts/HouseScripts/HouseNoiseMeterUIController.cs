@@ -13,12 +13,21 @@ public class HouseNoiseMeterUIController : MonoBehaviour
 
     private void Start()
     {
+        GameManager.instance.OnGameEnded += HandleOnGameEnded;
         foreach (GameObject house in HouseManager.instance.GetItemList().Values)
         {
             House houseScript = house.GetComponentInChildren<House>();
             houseScript.OnShowHouseNoiseMeter += HandleShowHouseNoiseMeterUI;
             houseScript.OnHideHouseNoiseMeter += HandleHideHouseNoiseMeterUI;
             houseScript.OnNoiseMeterChanged += HandleNoiseMeterChanged;
+        }
+    }
+
+    private void HandleOnGameEnded()
+    {
+        if(UIIsActive)
+        {
+            HideUI();
         }
     }
 
@@ -29,8 +38,7 @@ public class HouseNoiseMeterUIController : MonoBehaviour
         //Change UI.
         SetNoiseMeterValue(houseCurrentNoiseValue);
         //Show UI.
-        NoiseMeterUI.SetActive(true);
-        UIIsActive = true;
+        ShowUI();
     }
 
     private void HandleHideHouseNoiseMeterUI(int houseNum)
@@ -38,9 +46,22 @@ public class HouseNoiseMeterUIController : MonoBehaviour
         if(currentHouseNum == houseNum)
         {
             //Hide UI.
-            NoiseMeterUI.SetActive(false);
-            UIIsActive = false;
+            HideUI();
         }
+    }
+
+    private void ShowUI()
+    {
+        //Show UI.
+        NoiseMeterUI.SetActive(true);
+        UIIsActive = true;
+    }
+
+    private void HideUI()
+    {
+        //Hide UI.
+        NoiseMeterUI.SetActive(false);
+        UIIsActive = false;
     }
 
     private void HandleNoiseMeterChanged(int houseNum, float newNoiseValue)

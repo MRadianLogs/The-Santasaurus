@@ -51,7 +51,7 @@ public class Destination : MonoBehaviour
     {
         if(item.GetDestNum() == destNum)
         {
-            Debug.Log("" + item.name + " is in the right place!");
+            //Debug.Log("" + item.name + " is in the right place!");
             item.SetIsInCorrectDest(true);
         }
     }

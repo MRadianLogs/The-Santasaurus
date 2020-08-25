@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     private float score = 0;
     private bool gameHasEnded = false;
 
+    public event Action OnGameStarted = delegate { };
+    public event Action OnGameEnded = delegate { };
     [SerializeField] private GameObject gameOverUI = null;
     [SerializeField] private Text scoreText = null;
 
@@ -41,6 +43,8 @@ public class GameManager : MonoBehaviour
 
         score = 0;
         gameHasEnded = false;
+        OnGameStarted();
+        Time.timeScale = 1;
         StartCoroutine(TickDownTime());
     }
 
@@ -85,6 +89,9 @@ public class GameManager : MonoBehaviour
             //Good job giving!
             //Calc points.
             CalcPoints();
+
+            //Hide all other UI.
+            OnGameEnded();
             //Show game over screen.
             gameOverUI.SetActive(true);
             StartCoroutine(StopTimeAfterEndGame());
