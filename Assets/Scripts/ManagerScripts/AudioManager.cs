@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -7,11 +6,8 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
 
     [SerializeField] private AudioSource backgroundMusicAudioSource = null;
-    private bool backgroundMusicPaused = false;
     [SerializeField] private AudioSource gameSoundEffectsAudioSource = null;
-    private bool gameSoundEffectsPaused = false;
     [SerializeField] private AudioSource playerSoundEffectsAudioSource = null;
-    private bool playerSoundEffectsPaused = false;
 
     //TODO: Create audioClip manager to store and retrieve all audio clips by string or method?
     [SerializeField] private AudioClip gameStartedClip = null;
