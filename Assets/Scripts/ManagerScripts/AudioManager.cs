@@ -7,7 +7,25 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
 
     [SerializeField] private AudioSource backgroundMusicAudioSource = null;
+    private bool backgroundMusicPaused = false;
+    [SerializeField] private AudioSource gameSoundEffectsAudioSource = null;
+    private bool gameSoundEffectsPaused = false;
     [SerializeField] private AudioSource playerSoundEffectsAudioSource = null;
+    private bool playerSoundEffectsPaused = false;
+
+    //TODO: Create audioClip manager to store and retrieve all audio clips by string or method?
+    [SerializeField] private AudioClip gameStartedClip = null;
+    [SerializeField] private AudioClip gameEndedClip = null;
+    [SerializeField] private AudioClip noiseMeterFullClip = null;
+
+    [SerializeField] private AudioClip entrywayOpenedClip = null;
+    [SerializeField] private AudioClip entrywayClosedClip = null;
+
+    [SerializeField] private AudioClip itemPickedUpClip = null;
+    [SerializeField] private AudioClip itemDroppedClip = null;
+
+    private Dictionary<int, AudioSource> entrywayAudioSources = null;
+    private List<AudioSource> pausedAudioSources = null; //Used to store what audio sources are paused when the game is paused.
 
     private void Awake()
     {
@@ -20,6 +38,9 @@ public class AudioManager : MonoBehaviour
             Debug.Log("Instance already exists! Destroying object!");
             Destroy(transform.root.gameObject);
         }
+
+        entrywayAudioSources = new Dictionary<int, AudioSource>();
+        pausedAudioSources = new List<AudioSource>();
     }
 
     private void Start()
@@ -30,67 +51,111 @@ public class AudioManager : MonoBehaviour
             GameManager.instance.OnHandleNoiseMeterFull += HandleNoiseMeterFull;
             GameManager.instance.OnGameEnded += HandleGameEnded;
         }
-        if(HouseManager.instance != null)
+        if(EntrywayManager.instance != null)
         {
-            foreach (GameObject houseObject in HouseManager.instance.GetItemList().Values)
+            foreach (GameObject entrywayObject in EntrywayManager.instance.GetItemList().Values)
             {
-                House houseScript = houseObject.GetComponentInChildren<House>();
-                foreach (GameObject entrywayObject in houseScript.GetEntryways())
-                {
-                    Entryway entrywayScript = entrywayObject.GetComponentInChildren<Entryway>();
-                    entrywayScript.OnEntrywayOpened += HandleEntrywayOpened;
-                    entrywayScript.OnEntrywayClosed += HandleEntrywayClosed;
-                }
+                Entryway entrywayScript = entrywayObject.GetComponentInChildren<Entryway>();
+                entrywayAudioSources.Add(entrywayScript.GetEntrywayNum(), entrywayObject.GetComponentInChildren<AudioSource>());
+                entrywayScript.OnEntrywayOpened += HandleEntrywayOpened;
+                entrywayScript.OnEntrywayClosed += HandleEntrywayClosed;
             }
+            
         }
         if(PlayerInventoryController.instance != null)
         {
             PlayerInventoryController.instance.OnItemPickedUp += HandleItemPickedUp;
             PlayerInventoryController.instance.OnItemDropped += HandleItemDropped;
         }
+        if(PauseController.instance != null)
+        {
+            PauseController.instance.OnGamePaused += HandleGamePaused;
+            PauseController.instance.OnGameResumed += HandleGameResumed;
+        }
     }
 
     private void PlayAudioClip(AudioSource soundSource, AudioClip clipToPlay)
     {
-        if(soundSource.isPlaying)
+        if (soundSource != null && clipToPlay != null)
         {
-            soundSource.Stop();
+            if (soundSource.isPlaying)
+            {
+                soundSource.Stop(); //TODO: Consider not stopping the audio, if it seems fluid.
+            }
+            soundSource.clip = clipToPlay;
+            soundSource.Play();
         }
-        soundSource.clip = clipToPlay;
-        soundSource.Play();
+    }
+
+    private void HandleGamePaused()
+    {
+        //See what audio is playing. Pause it. Add to pausedAudioList.
+        if(backgroundMusicAudioSource != null && backgroundMusicAudioSource.isPlaying)
+        {
+            backgroundMusicAudioSource.Pause();
+            pausedAudioSources.Add(backgroundMusicAudioSource);
+        }
+        if(gameSoundEffectsAudioSource != null && gameSoundEffectsAudioSource.isPlaying)
+        {
+            gameSoundEffectsAudioSource.Pause();
+            pausedAudioSources.Add(gameSoundEffectsAudioSource);
+        }
+        if(playerSoundEffectsAudioSource != null && playerSoundEffectsAudioSource.isPlaying)
+        {
+            playerSoundEffectsAudioSource.Pause();
+            pausedAudioSources.Add(playerSoundEffectsAudioSource);
+        }
+        foreach (AudioSource source in entrywayAudioSources.Values)
+        {
+            if(source != null && source.isPlaying)
+            {
+                source.Pause();
+                pausedAudioSources.Add(source);
+            }
+        }
+    }
+    private void HandleGameResumed()
+    {
+        //Go through paused audio list. Resume it.
+        foreach (AudioSource source in pausedAudioSources)
+        {
+            if(source != null)
+                source.Play();
+        }
+        pausedAudioSources.Clear();
     }
 
     private void HandleGameStarted()
     {
-
+        PlayAudioClip(gameSoundEffectsAudioSource, gameStartedClip);
     }
 
     private void HandleNoiseMeterFull()
     {
-
+        PlayAudioClip(gameSoundEffectsAudioSource, noiseMeterFullClip);
     }
 
     private void HandleGameEnded()
     {
-
+        PlayAudioClip(gameSoundEffectsAudioSource, gameEndedClip);
     }
 
-    private void HandleEntrywayOpened()//Need to know entryway audio source?
+    private void HandleEntrywayOpened(int entrywayNum)
     {
-
+        PlayAudioClip(entrywayAudioSources[entrywayNum], entrywayOpenedClip);
     }
 
-    private void HandleEntrywayClosed()
+    private void HandleEntrywayClosed(int entrywayNum)
     {
-
+        PlayAudioClip(entrywayAudioSources[entrywayNum], entrywayClosedClip);
     }
 
-    private void HandleItemPickedUp()//Need to know item audio source?
+    private void HandleItemPickedUp()
     {
-
+        PlayAudioClip(gameSoundEffectsAudioSource, itemPickedUpClip);
     }
     private void HandleItemDropped()
     {
-
+        PlayAudioClip(gameSoundEffectsAudioSource, itemDroppedClip);
     }
 }

@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class Entryway : Interactable
 {
+    private int entrywayNum = -1;
     [SerializeField] private int houseNum = -1;
     [SerializeField] private float interactNoiseLevel = -1f; //How much noise using this item creates.
     [SerializeField] private GameObject door = null; //The actual object that disappears when the player interacts with it.
     private bool currentlyOpened = false;
-    public event Action OnEntrywayOpened = delegate { };
-    public event Action OnEntrywayClosed = delegate { };
+    public event Action<int> OnEntrywayOpened = delegate { };
+    public event Action<int> OnEntrywayClosed = delegate { };
     [SerializeField] private float timeBeforeAutoClose = 3f;
 
     private bool coroutineRunning = false;
@@ -37,7 +38,7 @@ public class Entryway : Interactable
     {
         door.SetActive(false);
         currentlyOpened = true;
-        OnEntrywayOpened();
+        OnEntrywayOpened(entrywayNum);
         //Add noise to house sneak meter.
         HouseManager.instance.AddNoiseToHouse(houseNum, interactNoiseLevel);
     }
@@ -46,7 +47,7 @@ public class Entryway : Interactable
     {
         door.SetActive(true);
         currentlyOpened = false;
-        OnEntrywayClosed();
+        OnEntrywayClosed(entrywayNum);
         //Add noise to house sneak meter.
     }
 
@@ -61,5 +62,14 @@ public class Entryway : Interactable
         }
         //Debug.Log("Auto closed!");
         coroutineRunning = false;
+    }
+
+    public void SetEntrywayNum(int newValue)
+    {
+        entrywayNum = newValue;
+    }
+    public int GetEntrywayNum()
+    {
+        return entrywayNum;
     }
 }

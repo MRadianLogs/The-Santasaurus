@@ -7,31 +7,16 @@ public class PauseMenuFunctions : MonoBehaviour
 
     [SerializeField] private GameObject pauseMenuUI = null;
 
-    [SerializeField] private PlayerInputController inputController = null;
-
     private void Start()
     {
-        GameManager.instance.OnGameEnded += HandleOnGameEnded;
-
-        gameIsPaused = false;    
-    }
-
-    private void Update()
-    {
-        if (!GameManager.instance.GetGameHasEnded())
+        if(GameManager.instance != null)
+            GameManager.instance.OnGameEnded += HandleOnGameEnded;
+        if(PauseController.instance != null)
         {
-            if (inputController.PauseButtonInput)
-            {
-                if (gameIsPaused)
-                {
-                    ResumeGame();
-                }
-                else
-                {
-                    PauseGame();
-                }
-            }
+            PauseController.instance.OnGamePaused += HandleGamePaused;
+            PauseController.instance.OnGameResumed += HandleGameResumed;
         }
+        gameIsPaused = false;    
     }
 
     private void HandleOnGameEnded()
@@ -42,17 +27,15 @@ public class PauseMenuFunctions : MonoBehaviour
         }
     }
 
-    public void PauseGame()
+    public void HandleGamePaused()
     {
         ShowUI();//Brings up menu.
-        Time.timeScale = 0f; //Stops game.
         gameIsPaused = true;
     }
 
-    public void ResumeGame()
+    public void HandleGameResumed()
     {
         HideUI();
-        Time.timeScale = 1f; //Resumes game.
         gameIsPaused = false;
     }
 
