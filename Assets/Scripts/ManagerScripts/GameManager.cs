@@ -17,8 +17,6 @@ public class GameManager : MonoBehaviour
     public event Action OnGameStarted = delegate { };
     public event Action OnHandleNoiseMeterFull = delegate { };
     public event Action OnGameEnded = delegate { };
-    [SerializeField] private GameObject gameOverUI = null;
-    [SerializeField] private Text scoreText = null;
 
     private void Awake()
     {
@@ -92,10 +90,8 @@ public class GameManager : MonoBehaviour
             //Calc points.
             CalcPoints();
 
-            //Hide all other UI.
+            //Hide all other UI and show game over screen.
             OnGameEnded();
-            //Show game over screen.
-            gameOverUI.SetActive(true);
             StartCoroutine(StopTimeAfterEndGame());
         }
     }
@@ -119,12 +115,16 @@ public class GameManager : MonoBehaviour
                 //Debug.Log("Adding to score!");
             }
         }
-        scoreText.text = score.ToString();
         //Debug.Log("Total points: " + score);
     }
 
     public bool GetGameHasEnded()
     {
         return gameHasEnded;
+    }
+
+    public float GetScore()
+    {
+        return score;
     }
 }
