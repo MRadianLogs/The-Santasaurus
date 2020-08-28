@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     private bool gameHasEnded = false;
 
     public event Action OnGameStarted = delegate { };
+    public event Action OnHandleNoiseMeterFull = delegate { };
     public event Action OnGameEnded = delegate { };
     [SerializeField] private GameObject gameOverUI = null;
     [SerializeField] private Text scoreText = null;
@@ -77,6 +78,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleHouseNoiseMeterFull()
     {
+        OnHandleNoiseMeterFull(); //A noise meter has filled.
         EndGame();
     }
 

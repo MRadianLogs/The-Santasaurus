@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class Entryway : Interactable
@@ -8,6 +8,8 @@ public class Entryway : Interactable
     [SerializeField] private float interactNoiseLevel = -1f; //How much noise using this item creates.
     [SerializeField] private GameObject door = null; //The actual object that disappears when the player interacts with it.
     private bool currentlyOpened = false;
+    public event Action OnEntrywayOpened = delegate { };
+    public event Action OnEntrywayClosed = delegate { };
     [SerializeField] private float timeBeforeAutoClose = 3f;
 
     private bool coroutineRunning = false;
@@ -23,7 +25,7 @@ public class Entryway : Interactable
                 StopCoroutine(runningRoutine);
                 coroutineRunning = false;
             }
-            runningRoutine = StartCoroutine(TimedEntrywayAutoShut()); ///TODO: Fix getting stuck in collider if in entryway when closed.
+            runningRoutine = StartCoroutine(TimedEntrywayAutoShut());
         }
         else
         {
@@ -35,6 +37,7 @@ public class Entryway : Interactable
     {
         door.SetActive(false);
         currentlyOpened = true;
+        OnEntrywayOpened();
         //Add noise to house sneak meter.
         HouseManager.instance.AddNoiseToHouse(houseNum, interactNoiseLevel);
     }
@@ -43,6 +46,7 @@ public class Entryway : Interactable
     {
         door.SetActive(true);
         currentlyOpened = false;
+        OnEntrywayClosed();
         //Add noise to house sneak meter.
     }
 

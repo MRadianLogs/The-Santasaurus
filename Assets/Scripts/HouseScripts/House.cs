@@ -177,4 +177,9 @@ public class House : MonoBehaviour
         playerIsNearHouse = newValue;
         //Debug.Log("Player near house: " + playerIsNearHouse);
     }
+
+    public List<GameObject> GetEntryways()
+    {
+        return entryways;
+    }
 }
