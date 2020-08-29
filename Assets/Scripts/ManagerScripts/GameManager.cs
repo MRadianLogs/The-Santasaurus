@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     public event Action OnGameStarted = delegate { };
     public event Action OnHandleNoiseMeterFull = delegate { };
+    public event Action OnTimeRanOut = delegate { };
     public event Action OnGameEnded = delegate { };
 
     private void Awake()
@@ -62,6 +63,7 @@ public class GameManager : MonoBehaviour
         //Round shoudle end when player gets all gifts in the proper locations or time runs out.
         if(timeLeftInGame <= 0)//Time runs out.
         {
+            OnTimeRanOut();
             //Stop game. 
             EndGame();
         }
@@ -96,7 +98,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator StopTimeAfterEndGame()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
         Time.timeScale = 0f;//Stops  game time.
     }
 

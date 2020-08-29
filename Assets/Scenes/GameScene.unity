@@ -154,10 +154,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -114007,7 +114007,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -116793,11 +116793,12 @@ MonoBehaviour:
   playerSoundEffectsAudioSource: {fileID: 1742103088}
   gameStartedClip: {fileID: 0}
   gameEndedClip: {fileID: 0}
-  noiseMeterFullClip: {fileID: 0}
-  entrywayOpenedClip: {fileID: 0}
-  entrywayClosedClip: {fileID: 0}
-  itemPickedUpClip: {fileID: 0}
-  itemDroppedClip: {fileID: 0}
+  noiseMeterFullClip: {fileID: 8300000, guid: a7886016799843843bdcd8b68f23c88e, type: 3}
+  timeRanOutClip: {fileID: 8300000, guid: d28aa0455ed7e8a43bcae0df30dcd8ef, type: 3}
+  entrywayOpenedClip: {fileID: 8300000, guid: e52810a27c39c9542a176c197c9e9dd6, type: 3}
+  entrywayClosedClip: {fileID: 8300000, guid: 18823c3e1f882994a984e7a0ff4a0444, type: 3}
+  itemPickedUpClip: {fileID: 8300000, guid: 22d8c32162ce4b845a77748c40849b37, type: 3}
+  itemDroppedClip: {fileID: 8300000, guid: b296846178e40a143b850b20e8437fef, type: 3}
 --- !u!4 &1476851657
 Transform:
   m_ObjectHideFlags: 0
@@ -133017,7 +133018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74822c70dfb9f8641855ab15668973d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLeftInGame: 240
+  timeLeftInGame: 10
 --- !u!4 &2130446728
 Transform:
   m_ObjectHideFlags: 0

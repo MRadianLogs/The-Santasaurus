@@ -13,6 +13,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip gameStartedClip = null;
     [SerializeField] private AudioClip gameEndedClip = null;
     [SerializeField] private AudioClip noiseMeterFullClip = null;
+    [SerializeField] private AudioClip timeRanOutClip = null;
 
     [SerializeField] private AudioClip entrywayOpenedClip = null;
     [SerializeField] private AudioClip entrywayClosedClip = null;
@@ -43,9 +44,10 @@ public class AudioManager : MonoBehaviour
     {
         if(GameManager.instance != null)
         {
-            GameManager.instance.OnGameStarted += HandleGameStarted;
+            //GameManager.instance.OnGameStarted += HandleGameStarted;
             GameManager.instance.OnHandleNoiseMeterFull += HandleNoiseMeterFull;
-            GameManager.instance.OnGameEnded += HandleGameEnded;
+            GameManager.instance.OnTimeRanOut += HandleTimeRanOut;
+            //GameManager.instance.OnGameEnded += HandleGameEnded;
         }
         if(EntrywayManager.instance != null)
         {
@@ -129,6 +131,11 @@ public class AudioManager : MonoBehaviour
     private void HandleNoiseMeterFull()
     {
         PlayAudioClip(gameSoundEffectsAudioSource, noiseMeterFullClip);
+    }
+
+    private void HandleTimeRanOut()
+    {
+        PlayAudioClip(gameSoundEffectsAudioSource, timeRanOutClip);
     }
 
     private void HandleGameEnded()

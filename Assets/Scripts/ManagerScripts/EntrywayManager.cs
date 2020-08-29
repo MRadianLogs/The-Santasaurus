@@ -21,14 +21,13 @@ public class EntrywayManager : Manager
 
     public override void SetupList()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        foreach (Entryway entryway in transform.GetComponentsInChildren<Entryway>())
         {
-            GameObject child = transform.GetChild(i).gameObject;
-            Entryway childType = child.GetComponentInChildren<Entryway>();
-            if (childType != null)
+            GameObject child = entryway.gameObject;
+            if (entryway != null)
             {
-                childType.SetEntrywayNum(GetItemList().Count);
-                AddItemToList(childType.GetEntrywayNum(), child);
+                entryway.SetEntrywayNum(GetItemList().Count);
+                AddItemToList(entryway.GetEntrywayNum(), child);
             }
         }
     }
