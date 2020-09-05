@@ -133018,7 +133018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74822c70dfb9f8641855ab15668973d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLeftInGame: 10
+  timeLeftInGame: 240
 --- !u!4 &2130446728
 Transform:
   m_ObjectHideFlags: 0
